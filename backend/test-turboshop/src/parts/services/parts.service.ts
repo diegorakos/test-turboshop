@@ -117,6 +117,7 @@ export class PartsService {
       list.forEach((part) => {
         if (partMap.has(part.sku)) {
           const existing = partMap.get(part.sku)!;
+          this.mergeMetadata(existing, part);
           existing.providers.push(...part.providers);
           // Update price and stock with best offer (only from providers with stock)
           const availableProviders = existing.providers.filter(
@@ -130,7 +131,7 @@ export class PartsService {
           existing.price = prices.length > 0 ? Math.min(...prices) : 0;
           existing.stock = Math.max(...stocks);
         } else {
-          partMap.set(part.sku, part);
+          partMap.set(part.sku, { ...part, providers: [...part.providers] });
         }
       });
     });
@@ -141,15 +142,44 @@ export class PartsService {
     return allParts;
   }
 
+  private mergeMetadata(target: PartDTO, source: PartDTO): void {
+    if (!target.name && source.name) {
+      target.name = source.name;
+    }
+    if (
+      source.description &&
+      (!target.description ||
+        source.description.length > target.description.length)
+    ) {
+      target.description = source.description;
+    }
+    if (!target.brand && source.brand) {
+      target.brand = source.brand;
+    }
+    if (!target.model && source.model) {
+      target.model = source.model;
+    }
+    if (!target.year && source.year) {
+      target.year = source.year;
+    }
+    if (!target.image && source.image) {
+      target.image = source.image;
+    }
+    if (!target.category && source.category) {
+      target.category = source.category;
+    }
+  }
+
   private mergeParts(parts: PartDTO[]): PartDTO {
     if (parts.length === 0) {
       throw new Error('No parts to merge');
     }
 
-    const base = parts[0];
+    const merged: PartDTO = { ...parts[0], providers: [] };
     const providers: ProviderOfferDTO[] = [];
 
     parts.forEach((part) => {
+      this.mergeMetadata(merged, part);
       providers.push(...part.providers);
     });
 
@@ -162,7 +192,7 @@ export class PartsService {
     const stocks = providers.map((p) => p.stock);
 
     return {
-      ...base,
+      ...merged,
       price: prices.length > 0 ? Math.min(...prices) : 0,
       stock: Math.max(...stocks),
       providers: providers.sort((a, b) => a.price - b.price),

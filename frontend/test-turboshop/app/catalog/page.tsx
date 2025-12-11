@@ -4,6 +4,18 @@ import { useEffect, useState } from "react";
 import { partsAPI, CatalogResponse } from "@/lib/api";
 import Link from "next/link";
 
+const MIN_YEAR = 1980;
+const MAX_YEAR = new Date().getFullYear() + 1;
+
+type FiltersState = {
+  carBrand: string;
+  carModel: string;
+  carYear: number | "";
+};
+
+const clampYear = (value: number) =>
+  Math.min(MAX_YEAR, Math.max(MIN_YEAR, value));
+
 export default function CatalogPage() {
   const [catalog, setCatalog] = useState<CatalogResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -11,7 +23,7 @@ export default function CatalogPage() {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FiltersState>({
     carBrand: "",
     carModel: "",
     carYear: "",
@@ -36,9 +48,10 @@ export default function CatalogPage() {
         setError(null);
 
         const result = await partsAPI.getCatalog(page, 20, debouncedSearch, {
-          carBrand: filters.carBrand || undefined,
-          carModel: filters.carModel || undefined,
-          carYear: filters.carYear ? parseInt(filters.carYear) : undefined,
+          carBrand: filters.carBrand.trim() || undefined,
+          carModel: filters.carModel.trim() || undefined,
+          carYear:
+            filters.carYear === "" ? undefined : clampYear(filters.carYear),
         });
 
         setCatalog(result);
@@ -53,10 +66,43 @@ export default function CatalogPage() {
     fetchCatalog();
   }, [page, debouncedSearch, filters]);
 
-  const handleFilterChange = (field: string, value: string) => {
+  const handleFilterChange = (
+    field: "carBrand" | "carModel",
+    value: string
+  ) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
     setPage(1);
   };
+
+  const handleYearChange = (value: string) => {
+    if (!value) {
+      setFilters((prev) => ({ ...prev, carYear: "" }));
+      setPage(1);
+      return;
+    }
+
+    const numeric = clampYear(Number(value));
+    if (!Number.isNaN(numeric)) {
+      setFilters((prev) => ({ ...prev, carYear: numeric }));
+      setPage(1);
+    }
+  };
+
+  const resetAll = () => {
+    setSearch("");
+    setDebouncedSearch("");
+    setFilters({ carBrand: "", carModel: "", carYear: "" });
+    setPage(1);
+  };
+
+  const activeFilters = [
+    filters.carBrand && { label: "Marca", value: filters.carBrand },
+    filters.carModel && { label: "Modelo", value: filters.carModel },
+    filters.carYear !== "" && {
+      label: "Año",
+      value: String(filters.carYear),
+    },
+  ].filter(Boolean) as { label: string; value: string }[];
 
   if (error) {
     return (
@@ -80,49 +126,117 @@ export default function CatalogPage() {
 
       {/* Search and Filters */}
       <div className="mb-8 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <input
-            type="text"
-            placeholder="Buscar repuestos..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
-          />
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <p className="text-slate-800 font-semibold">Filtros rápidos</p>
+            <p className="text-xs text-slate-500">
+              Marca, modelo y año con límites válidos
+            </p>
+          </div>
+          {activeFilters.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {activeFilters.map((filter) => (
+                <span
+                  key={`${filter.label}-${filter.value}`}
+                  className="px-2 py-1 rounded-full bg-teal-50 text-teal-700 text-xs border border-teal-200"
+                >
+                  {filter.label}: {filter.value}
+                </span>
+              ))}
+              <button
+                onClick={resetAll}
+                className="text-xs px-3 py-1 bg-slate-800 text-white rounded-full hover:bg-slate-900 transition-colors"
+              >
+                Limpiar todo
+              </button>
+            </div>
+          )}
+        </div>
 
-          <input
-            type="text"
-            placeholder="Marca del Auto"
-            value={filters.carBrand}
-            onChange={(e) => handleFilterChange("carBrand", e.target.value)}
-            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+          <div className="lg:col-span-2">
+            <label className="block text-xs text-slate-600 mb-1">
+              Búsqueda de repuestos
+            </label>
+            <input
+              type="text"
+              placeholder="Buscar por nombre, SKU o descripción"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
+            />
+          </div>
 
-          <input
-            type="text"
-            placeholder="Modelo del Auto"
-            value={filters.carModel}
-            onChange={(e) => handleFilterChange("carModel", e.target.value)}
-            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
-          />
+          <div>
+            <label className="block text-xs text-slate-600 mb-1">Marca</label>
+            <input
+              type="text"
+              placeholder="Ej. Toyota"
+              value={filters.carBrand}
+              onChange={(e) => handleFilterChange("carBrand", e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
+            />
+          </div>
 
-          <input
-            type="number"
-            placeholder="Año del Auto"
-            value={filters.carYear}
-            onChange={(e) => handleFilterChange("carYear", e.target.value)}
-            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
-          />
+          <div>
+            <label className="block text-xs text-slate-600 mb-1">Modelo</label>
+            <input
+              type="text"
+              placeholder="Ej. Corolla"
+              value={filters.carModel}
+              onChange={(e) => handleFilterChange("carModel", e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
+            />
+          </div>
+        </div>
 
-          <button
-            onClick={() => {
-              setSearch("");
-              setFilters({ carBrand: "", carModel: "", carYear: "" });
-              setPage(1);
-            }}
-            className="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium"
-          >
-            Limpiar
-          </button>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            <label className="block text-xs text-slate-600 mb-2">
+              Año del Auto (limitado {MIN_YEAR} - {MAX_YEAR})
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={MIN_YEAR}
+                max={MAX_YEAR}
+                step={1}
+                value={filters.carYear === "" ? MAX_YEAR : filters.carYear}
+                onChange={(e) => handleYearChange(e.target.value)}
+                className="w-full accent-teal-600"
+              />
+              <input
+                type="number"
+                min={MIN_YEAR}
+                max={MAX_YEAR}
+                value={filters.carYear === "" ? "" : filters.carYear}
+                placeholder={`${MIN_YEAR}-${MAX_YEAR}`}
+                onChange={(e) => handleYearChange(e.target.value)}
+                className="w-24 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
+              />
+            </div>
+            <div className="flex justify-between text-xs text-slate-500 mt-1">
+              <span>{MIN_YEAR}</span>
+              <span>{MAX_YEAR}</span>
+            </div>
+          </div>
+
+          <div className="flex items-end gap-2">
+            <button
+              onClick={() =>
+                handleYearChange(String(Math.round((MIN_YEAR + MAX_YEAR) / 2)))
+              }
+              className="flex-1 px-4 py-2 border border-slate-300 rounded-lg hover:border-teal-400 text-slate-800 transition-colors"
+            >
+              Año medio
+            </button>
+            <button
+              onClick={() => handleYearChange("")}
+              className="flex-1 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium"
+            >
+              Sin límite
+            </button>
+          </div>
         </div>
       </div>
 

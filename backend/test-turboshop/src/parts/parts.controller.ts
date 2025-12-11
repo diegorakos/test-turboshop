@@ -32,7 +32,10 @@ export class PartsController {
     if (carYear) {
       const yearNum = parseInt(carYear, 10);
       if (!Number.isNaN(yearNum)) {
-        filters.year = yearNum;
+        const minYear = 1950;
+        const maxYear = new Date().getFullYear() + 1;
+        const safeYear = Math.min(maxYear, Math.max(minYear, yearNum));
+        filters.year = safeYear;
       }
     }
 

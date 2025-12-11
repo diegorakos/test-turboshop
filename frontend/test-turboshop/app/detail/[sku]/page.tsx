@@ -32,6 +32,12 @@ export default function DetailPage() {
     fetchPart();
   }, [sku]);
 
+  const sortedOffers = part
+    ? [...part.providers].sort((a, b) => a.price - b.price)
+    : [];
+  const bestOffer =
+    sortedOffers.find((offer) => offer.stock > 0) || sortedOffers[0];
+
   if (loading) {
     return (
       <div className="p-6 text-center">
@@ -108,6 +114,10 @@ export default function DetailPage() {
             )}
 
             <div className="mb-6 grid grid-cols-2 gap-3 text-sm bg-slate-50 p-4 rounded border border-slate-200">
+              <div>
+                <span className="text-slate-600">Número de parte:</span>
+                <p className="font-semibold text-slate-900">{part.sku}</p>
+              </div>
               {part.brand && (
                 <div>
                   <span className="text-slate-600">Marca:</span>
@@ -132,6 +142,14 @@ export default function DetailPage() {
                   {part.providers.length}
                 </p>
               </div>
+              {part.category && (
+                <div>
+                  <span className="text-slate-600">Categoría:</span>
+                  <p className="font-semibold text-slate-900">
+                    {part.category}
+                  </p>
+                </div>
+              )}
               <div>
                 <span className="text-slate-600">Stock Total:</span>
                 <p
@@ -195,20 +213,41 @@ export default function DetailPage() {
             </div>
 
             <div className="mb-6 bg-teal-50 p-4 rounded border border-teal-200">
-              <h3 className="font-bold mb-2 text-slate-900">Mejor Precio</h3>
-              {part.stock > 0 ? (
-                <>
-                  <div className="text-4xl font-bold text-teal-600 mb-2">
-                    ${part.price}
+              <h3 className="font-bold mb-2 text-slate-900">Mejor oferta</h3>
+              {bestOffer ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                  <div>
+                    <div className="text-4xl font-bold text-teal-600 mb-2">
+                      ${bestOffer.price}
+                    </div>
+                    <div className="inline-block px-3 py-1 rounded font-semibold bg-green-100 text-green-900">
+                      {bestOffer.stock > 0
+                        ? `${bestOffer.stock} en stock`
+                        : "Sin stock"}
+                    </div>
                   </div>
-                  <div className="inline-block px-3 py-1 rounded font-semibold bg-green-100 text-green-900">
-                    {part.stock} en stock
+                  <div className="space-y-1 text-sm text-slate-700">
+                    <p className="font-semibold text-slate-900">
+                      {bestOffer.provider}
+                    </p>
+                    {bestOffer.providerSku && (
+                      <p>
+                        <span className="text-slate-600">SKU proveedor:</span>{" "}
+                        <code className="bg-white px-2 py-1 rounded text-xs">
+                          {bestOffer.providerSku}
+                        </code>
+                      </p>
+                    )}
+                    <p className="text-xs text-slate-500">
+                      Actualizado{" "}
+                      {new Date(bestOffer.lastUpdated).toLocaleString("es-ES")}
+                    </p>
                   </div>
-                </>
+                </div>
               ) : (
                 <div className="py-4 px-3 rounded bg-red-50 border border-red-200">
                   <span className="text-red-700 font-semibold">
-                    Sin stock disponible
+                    Sin ofertas disponibles
                   </span>
                 </div>
               )}
@@ -248,6 +287,20 @@ export default function DetailPage() {
                         {provider.stock} unidades
                       </p>
                     </div>
+                    {provider.providerSku && (
+                      <div>
+                        <span className="text-slate-700 text-sm font-medium">
+                          SKU proveedor
+                        </span>
+                        <code className="bg-slate-100 px-2 py-1 rounded text-xs text-slate-900">
+                          {provider.providerSku}
+                        </code>
+                      </div>
+                    )}
+                    <p className="text-xs text-slate-500">
+                      Actualizado{" "}
+                      {new Date(provider.lastUpdated).toLocaleString("es-ES")}
+                    </p>
                   </div>
                 ) : (
                   <div className="py-6 px-3 rounded bg-red-50 border border-red-200 flex items-center justify-center">
