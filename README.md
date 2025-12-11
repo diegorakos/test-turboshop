@@ -62,7 +62,7 @@ npm install
 ### Backend (.env)
 
 ```env
-PORT=3000
+PORT=3001
 PROVIDER_BASE_URL=https://web-production-84144.up.railway.app
 NODE_ENV=development
 ```
@@ -70,7 +70,7 @@ NODE_ENV=development
 ### Frontend (.env.local)
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:3000/api
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ```
 
 ## Ejecución Local
@@ -79,8 +79,8 @@ NEXT_PUBLIC_API_URL=http://localhost:3000/api
 
 ```bash
 cd backend/test-turboshop
-npm run start:dev
-# Backend disponible en http://localhost:3000
+PORT=3001 npm run start:dev
+# Backend disponible en http://localhost:3001
 ```
 
 ### 2. Iniciar el Frontend (en otra terminal)
@@ -88,10 +88,10 @@ npm run start:dev
 ```bash
 cd frontend/test-turboshop
 npm run dev
-# Frontend disponible en http://localhost:3001
+# Frontend disponible en http://localhost:3000
 ```
 
-Abre [http://localhost:3001](http://localhost:3001) en tu navegador.
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ## API Endpoints
 
