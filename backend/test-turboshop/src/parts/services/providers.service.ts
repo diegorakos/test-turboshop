@@ -106,8 +106,7 @@ export class ProvidersService {
   private normalizeRepuestosMax(data: any): PartDTO {
     const sku = data.identificacion?.sku || data.sku || data.codigo;
     const nombre = data.informacionBasica?.nombre || data.nombre || '';
-    const descripcion =
-      data.informacionBasica?.descripcion || data.descripcion;
+    const descripcion = data.informacionBasica?.descripcion || data.descripcion;
     const precio = data.precio?.valor || data.precio || 0;
     const cantidad = data.inventario?.cantidad || data.stock || 0;
     const marca = data.informacionBasica?.marca?.nombre || data.marca;
@@ -198,8 +197,7 @@ export class ProvidersService {
     const brandName =
       data.ProductDetails?.BrandInfo?.BrandName || data.manufacturer;
     const categoryName =
-      data.ProductDetails?.CategoryInfo?.PrimaryCategory?.Name ||
-      data.category;
+      data.ProductDetails?.CategoryInfo?.PrimaryCategory?.Name || data.category;
     const imageUrl = data.MediaInfo?.Images?.[0]?.URL || data.image;
 
     return {

@@ -17,25 +17,25 @@ export default function RootLayout({
     <html lang="es">
       <body>
         {/* Header Navigation */}
-        <nav className="bg-white shadow-sm border-b">
+        <nav className="bg-white shadow border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <Link href="/">
-              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
-                <div className="text-2xl font-bold text-blue-600">🚗</div>
-                <h1 className="text-xl font-bold text-gray-800">
+              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+                <div className="text-2xl font-bold text-blue-700">🚗</div>
+                <h1 className="text-xl font-bold text-gray-900">
                   Marketplace de Repuestos
                 </h1>
               </div>
             </Link>
 
-            <div className="flex gap-4">
+            <div className="flex gap-6">
               <Link href="/">
-                <button className="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium">
+                <button className="px-4 py-2 text-gray-700 hover:text-blue-700 font-medium transition-colors">
                   Inicio
                 </button>
               </Link>
               <Link href="/catalog">
-                <button className="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium">
+                <button className="px-4 py-2 text-gray-700 hover:text-blue-700 font-medium transition-colors">
                   Catálogo
                 </button>
               </Link>
@@ -44,10 +44,10 @@ export default function RootLayout({
         </nav>
 
         {/* Main Content */}
-        <main className="min-h-screen bg-gray-50">{children}</main>
+        <main className="min-h-screen bg-gray-50/50">{children}</main>
 
         {/* Footer */}
-        <footer className="bg-gray-800 text-white py-8 mt-12">
+        <footer className="bg-gray-900 text-gray-100 py-8 mt-12 border-t border-gray-800">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
               <div>

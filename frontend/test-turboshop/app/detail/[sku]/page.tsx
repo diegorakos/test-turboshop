@@ -46,9 +46,9 @@ export default function DetailPage() {
   if (error) {
     return (
       <div className="p-6 text-center">
-        <p className="text-red-600 mb-4">Error: {error}</p>
+        <p className="text-red-600 font-bold mb-4">Error: {error}</p>
         <Link href="/catalog">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          <button className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors font-medium">
             Volver al catálogo
           </button>
         </Link>
@@ -59,9 +59,9 @@ export default function DetailPage() {
   if (!part) {
     return (
       <div className="p-6 text-center">
-        <p className="text-gray-600 mb-4">Repuesto no encontrado</p>
+        <p className="text-gray-700 font-medium mb-4">Repuesto no encontrado</p>
         <Link href="/catalog">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          <button className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors font-medium">
             Volver al catálogo
           </button>
         </Link>
@@ -72,12 +72,12 @@ export default function DetailPage() {
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <Link href="/catalog">
-        <button className="mb-6 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        <button className="mb-6 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 transition-colors font-medium">
           ← Volver al catálogo
         </button>
       </Link>
 
-      <div className="bg-white rounded-lg shadow-lg p-8">
+      <div className="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Image */}
           <div>
@@ -86,69 +86,74 @@ export default function DetailPage() {
               <img
                 src={part.image}
                 alt={part.name}
-                className="w-full rounded-lg border"
+                className="w-full rounded-lg border-2 border-gray-200"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  e.currentTarget.parentElement!.innerHTML =
+                    '<div class="w-full aspect-square bg-gray-200 rounded-lg flex items-center justify-center"><span class="text-gray-500">Sin imagen disponible</span></div>';
+                }}
               />
             ) : (
               <div className="w-full aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-400">Sin imagen</span>
+                <span className="text-gray-500 font-medium">Sin imagen disponible</span>
               </div>
             )}
           </div>
 
           {/* Info */}
           <div>
-            <h1 className="text-3xl font-bold mb-4">{part.name}</h1>
+            <h1 className="text-3xl font-bold mb-4 text-gray-900">{part.name}</h1>
 
             {part.description && (
               <p className="text-gray-700 mb-6">{part.description}</p>
             )}
 
             {/* Specs */}
-            <div className="mb-6 bg-gray-50 p-4 rounded">
-              <h3 className="font-bold mb-3">Especificaciones</h3>
+            <div className="mb-6 bg-gray-50 p-4 rounded border border-gray-200">
+              <h3 className="font-bold mb-3 text-gray-900">Especificaciones</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600">SKU:</span>
-                  <p className="font-semibold">{part.sku}</p>
+                  <span className="text-gray-700 font-medium">SKU:</span>
+                  <p className="font-semibold text-gray-900">{part.sku}</p>
                 </div>
                 {part.brand && (
                   <div>
-                    <span className="text-gray-600">Marca:</span>
-                    <p className="font-semibold">{part.brand}</p>
+                    <span className="text-gray-700 font-medium">Marca:</span>
+                    <p className="font-semibold text-gray-900">{part.brand}</p>
                   </div>
                 )}
                 {part.model && (
                   <div>
-                    <span className="text-gray-600">Modelo:</span>
-                    <p className="font-semibold">{part.model}</p>
+                    <span className="text-gray-700 font-medium">Modelo:</span>
+                    <p className="font-semibold text-gray-900">{part.model}</p>
                   </div>
                 )}
                 {part.year && (
                   <div>
-                    <span className="text-gray-600">Año:</span>
-                    <p className="font-semibold">{part.year}</p>
+                    <span className="text-gray-700 font-medium">Año:</span>
+                    <p className="font-semibold text-gray-900">{part.year}</p>
                   </div>
                 )}
                 {part.category && (
                   <div>
-                    <span className="text-gray-600">Categoría:</span>
-                    <p className="font-semibold">{part.category}</p>
+                    <span className="text-gray-700 font-medium">Categoría:</span>
+                    <p className="font-semibold text-gray-900">{part.category}</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Best Price */}
-            <div className="mb-6 bg-blue-50 p-4 rounded">
-              <h3 className="font-bold mb-2">Mejor Precio</h3>
-              <div className="text-4xl font-bold text-blue-600 mb-2">
+            <div className="mb-6 bg-blue-50 p-4 rounded border border-blue-200">
+              <h3 className="font-bold mb-2 text-gray-900">Mejor Precio</h3>
+              <div className="text-4xl font-bold text-blue-700 mb-2">
                 ${part.price.toFixed(2)}
               </div>
               <div
                 className={`inline-block px-3 py-1 rounded font-semibold ${
                   part.stock > 0
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
+                    ? "bg-green-100 text-green-900"
+                    : "bg-red-100 text-red-900"
                 }`}
               >
                 {part.stock > 0 ? `${part.stock} en stock` : "Sin stock"}
@@ -159,26 +164,26 @@ export default function DetailPage() {
 
         {/* Provider Offers */}
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Ofertas por Proveedor</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-900">Ofertas por Proveedor</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {part.providers.map((provider) => (
               <div
                 key={provider.provider}
-                className="border rounded-lg p-4 hover:shadow-lg transition-shadow"
+                className="border border-gray-200 rounded-lg p-4 hover:shadow-lg hover:border-blue-300 transition-all bg-white"
               >
-                <h3 className="font-bold text-lg mb-3">{provider.provider}</h3>
+                <h3 className="font-bold text-lg mb-3 text-gray-900">{provider.provider}</h3>
 
                 <div className="space-y-3">
                   <div>
-                    <span className="text-gray-600 text-sm">Precio</span>
-                    <p className="text-2xl font-bold text-blue-600">
+                    <span className="text-gray-700 text-sm font-medium">Precio</span>
+                    <p className="text-2xl font-bold text-blue-700">
                       ${provider.price.toFixed(2)}
                     </p>
                   </div>
 
                   <div>
-                    <span className="text-gray-600 text-sm">Stock</span>
-                    <p className="font-semibold">
+                    <span className="text-gray-700 text-sm font-medium">Stock</span>
+                    <p className="font-semibold text-gray-900">
                       {provider.stock > 0
                         ? `${provider.stock} unidades`
                         : "Sin stock"}
@@ -187,16 +192,16 @@ export default function DetailPage() {
 
                   {provider.providerSku && (
                     <div>
-                      <span className="text-gray-600 text-sm">
+                      <span className="text-gray-700 text-sm font-medium">
                         SKU Proveedor
                       </span>
-                      <p className="font-mono text-xs break-all">
+                      <p className="font-mono text-xs break-all text-gray-600">
                         {provider.providerSku}
                       </p>
                     </div>
                   )}
 
-                  <div className="pt-2 border-t">
+                  <div className="pt-2 border-t border-gray-200">
                     <span className="text-gray-600 text-xs">
                       Actualizado:{" "}
                       {new Date(provider.lastUpdated).toLocaleString()}

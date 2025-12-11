@@ -9,6 +9,7 @@ Updated the provider API normalization methods in the backend to correctly handl
 ### `/backend/test-turboshop/src/parts/services/providers.service.ts`
 
 #### AutoPartsPlus Normalization
+
 - **Source fields**: `title`, `desc`, `sku`, `unit_price`, `qty_available`, `brand_name`, `category_name`, `img_urls`
 - **Target mapping**:
   - `title` → `name`
@@ -22,6 +23,7 @@ Updated the provider API normalization methods in the backend to correctly handl
 - **Key change**: Now correctly extracts array from `response.data.parts`
 
 #### RepuestosMax Normalization
+
 - **Source fields**: Deeply nested hierarchical structure
   - `identificacion.sku` → `sku`
   - `informacionBasica.nombre` → `name`
@@ -35,6 +37,7 @@ Updated the provider API normalization methods in the backend to correctly handl
 - **Key change**: Now correctly navigates nested object structure with optional chaining
 
 #### GlobalParts Normalization
+
 - **Source fields**: Enterprise envelope pattern with header/body separation
   - `ItemHeader.ExternalReferences.SKU.Value` → `sku`
   - `ProductDetails.NameInfo.DisplayName` → `name`
@@ -50,19 +53,24 @@ Updated the provider API normalization methods in the backend to correctly handl
 ## Testing
 
 ### Tested Endpoints
+
 All three provider endpoints were tested with actual API calls:
 
 1. **AutoPartsPlus Catalog**
+
    ```bash
    curl "https://web-production-84144.up.railway.app/api/autopartsplus/catalog?page=1&limit=5"
    ```
+
    - Returns 98 items total (20 pages)
    - Each item has flat structure with nested arrays for images and vehicle compatibility
 
 2. **RepuestosMax Catalog**
+
    ```bash
    curl "https://web-production-84144.up.railway.app/api/repuestosmax/catalogo?pagina=1&limite=5"
    ```
+
    - Returns 47 items total (10 pages)
    - Hierarchical structure with nested objects for each concern
 
@@ -82,6 +90,7 @@ All three provider endpoints were tested with actual API calls:
 ## Next Steps
 
 1. Deploy updated backend to Railway:
+
    ```bash
    git add backend/test-turboshop/src/parts/services/providers.service.ts
    git commit -m "Update provider normalization to handle actual API formats"
@@ -89,6 +98,7 @@ All three provider endpoints were tested with actual API calls:
    ```
 
 2. Test the aggregated `/api/parts/catalog` endpoint once deployed:
+
    ```bash
    curl "http://localhost:3001/api/parts/catalog?page=1&limit=5"
    ```
@@ -107,12 +117,12 @@ All three provider endpoints were tested with actual API calls:
 
 All three providers now correctly normalize their responses:
 
-| Field | AutoPartsPlus | RepuestosMax | GlobalParts |
-|-------|---|---|---|
-| SKU | `sku` | `identificacion.sku` | `ItemHeader.ExternalReferences.SKU.Value` |
-| Name | `title` | `informacionBasica.nombre` | `ProductDetails.NameInfo.DisplayName` |
-| Price | `unit_price` | `precio.valor` | `PricingInfo.ListPrice.Amount` |
-| Stock | `qty_available` | `inventario.cantidad` | `AvailabilityInfo.QuantityInfo.AvailableQuantity` |
-| Brand | `brand_name` | `informacionBasica.marca.nombre` | `ProductDetails.BrandInfo.BrandName` |
+| Field    | AutoPartsPlus   | RepuestosMax                         | GlobalParts                                        |
+| -------- | --------------- | ------------------------------------ | -------------------------------------------------- |
+| SKU      | `sku`           | `identificacion.sku`                 | `ItemHeader.ExternalReferences.SKU.Value`          |
+| Name     | `title`         | `informacionBasica.nombre`           | `ProductDetails.NameInfo.DisplayName`              |
+| Price    | `unit_price`    | `precio.valor`                       | `PricingInfo.ListPrice.Amount`                     |
+| Stock    | `qty_available` | `inventario.cantidad`                | `AvailabilityInfo.QuantityInfo.AvailableQuantity`  |
+| Brand    | `brand_name`    | `informacionBasica.marca.nombre`     | `ProductDetails.BrandInfo.BrandName`               |
 | Category | `category_name` | `informacionBasica.categoria.nombre` | `ProductDetails.CategoryInfo.PrimaryCategory.Name` |
-| Image | `img_urls[0]` | `multimedia.imagenes[0].url` | `MediaInfo.Images[0].URL` |
+| Image    | `img_urls[0]`   | `multimedia.imagenes[0].url`         | `MediaInfo.Images[0].URL`                          |
