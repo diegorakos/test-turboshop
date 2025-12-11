@@ -179,27 +179,39 @@ export default function CatalogPage() {
                     {part.description}
                   </p>
                 )}
-                
+
                 {/* Product Details */}
                 <div className="mb-3 space-y-1 text-xs text-slate-600">
                   {part.category && (
                     <p>
-                      <span className="font-semibold text-slate-700">Categoría:</span> {part.category}
+                      <span className="font-semibold text-slate-700">
+                        Categoría:
+                      </span>{" "}
+                      {part.category}
                     </p>
                   )}
                   {part.brand && (
                     <p>
-                      <span className="font-semibold text-slate-700">Marca:</span> {part.brand}
+                      <span className="font-semibold text-slate-700">
+                        Marca:
+                      </span>{" "}
+                      {part.brand}
                     </p>
                   )}
                   <p>
-                    <span className="font-semibold text-slate-700">SKU:</span> <code className="text-xs bg-slate-100 px-1 rounded">{part.sku}</code>
+                    <span className="font-semibold text-slate-700">SKU:</span>{" "}
+                    <code className="text-xs bg-slate-100 px-1 rounded">
+                      {part.sku}
+                    </code>
                   </p>
                   <p>
-                    <span className="font-semibold text-slate-700">Proveedores:</span> {part.providers.length}
+                    <span className="font-semibold text-slate-700">
+                      Proveedores:
+                    </span>{" "}
+                    {part.providers.length}
                   </p>
                 </div>
-                
+
                 <div className="mt-auto">
                   {part.stock > 0 ? (
                     <>
