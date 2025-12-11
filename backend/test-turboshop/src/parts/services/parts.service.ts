@@ -118,10 +118,13 @@ export class PartsService {
         if (partMap.has(part.sku)) {
           const existing = partMap.get(part.sku)!;
           existing.providers.push(...part.providers);
-          // Update price and stock with best offer
-          const prices = existing.providers.map((p) => p.price);
+          // Update price and stock with best offer (only from providers with stock)
+          const availableProviders = existing.providers.filter((p) => p.stock > 0);
+          const prices = availableProviders.length > 0 
+            ? availableProviders.map((p) => p.price)
+            : existing.providers.map((p) => p.price);
           const stocks = existing.providers.map((p) => p.stock);
-          existing.price = Math.min(...prices);
+          existing.price = prices.length > 0 ? Math.min(...prices) : 0;
           existing.stock = Math.max(...stocks);
         } else {
           partMap.set(part.sku, part);
@@ -147,12 +150,16 @@ export class PartsService {
       providers.push(...part.providers);
     });
 
-    const prices = providers.map((p) => p.price);
+    // Only calculate price from providers that have stock
+    const availableProviders = providers.filter((p) => p.stock > 0);
+    const prices = availableProviders.length > 0 
+      ? availableProviders.map((p) => p.price)
+      : providers.map((p) => p.price);
     const stocks = providers.map((p) => p.stock);
 
     return {
       ...base,
-      price: Math.min(...prices),
+      price: prices.length > 0 ? Math.min(...prices) : 0,
       stock: Math.max(...stocks),
       providers: providers.sort((a, b) => a.price - b.price),
     };
