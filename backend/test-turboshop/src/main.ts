@@ -11,6 +11,8 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://127.0.0.1:3001',
       'http://127.0.0.1:3000',
+      /\.vercel\.app$/, // Allow all Vercel deployments
+      /\.railway\.app$/, // Allow Railway if needed
     ],
     credentials: true,
   });
