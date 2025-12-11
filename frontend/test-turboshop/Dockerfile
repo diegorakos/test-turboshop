@@ -1,22 +1,25 @@
-FROM node:22-bookworm-slim
-
+# Multi-stage build to reduce vulnerabilities and image size
+FROM node:22-alpine3.20 AS base
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy package files
+FROM base AS deps
 COPY package*.json ./
-
-# Install all dependencies
 RUN npm ci
 
-# Copy source code
+FROM deps AS build
 COPY . .
-
-# Build the application
 RUN npm run build
 
-# Remove dev dependencies (optional)
-RUN npm prune --production
-
+FROM base AS runner
+ENV NODE_ENV=production
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev --prefer-offline --no-audit
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+COPY --from=build /app/next.config.ts ./next.config.ts
+COPY --from=build /app/package*.json ./
+USER node
 EXPOSE 3000
-
 CMD ["npm", "run", "start"]
