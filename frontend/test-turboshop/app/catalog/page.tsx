@@ -175,10 +175,31 @@ export default function CatalogPage() {
                   {part.name}
                 </h3>
                 {part.description && (
-                  <p className="text-sm text-slate-600 mb-2 line-clamp-2">
+                  <p className="text-sm text-slate-600 mb-3 line-clamp-2">
                     {part.description}
                   </p>
                 )}
+                
+                {/* Product Details */}
+                <div className="mb-3 space-y-1 text-xs text-slate-600">
+                  {part.category && (
+                    <p>
+                      <span className="font-semibold text-slate-700">Categoría:</span> {part.category}
+                    </p>
+                  )}
+                  {part.brand && (
+                    <p>
+                      <span className="font-semibold text-slate-700">Marca:</span> {part.brand}
+                    </p>
+                  )}
+                  <p>
+                    <span className="font-semibold text-slate-700">SKU:</span> <code className="text-xs bg-slate-100 px-1 rounded">{part.sku}</code>
+                  </p>
+                  <p>
+                    <span className="font-semibold text-slate-700">Proveedores:</span> {part.providers.length}
+                  </p>
+                </div>
+                
                 <div className="mt-auto">
                   {part.stock > 0 ? (
                     <>
@@ -189,9 +210,6 @@ export default function CatalogPage() {
                         <span className="px-3 py-1 rounded text-sm font-semibold bg-green-100 text-green-900">
                           {part.stock} en stock
                         </span>
-                      </div>
-                      <div className="text-xs text-slate-500">
-                        {part.providers.length} ofertas disponibles
                       </div>
                     </>
                   ) : (

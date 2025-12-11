@@ -218,33 +218,91 @@ export default function DetailPage() {
                     {provider.providerSku && (
                       <div>
                         <span className="text-slate-700 text-sm font-medium">
-                          SKU Proveedor
-                        </span>
-                        <p className="font-mono text-xs break-all text-slate-500">
-                          {provider.providerSku}
-                        </p>
-                      </div>
-                    )}
+                          {/* Info */}
+                          <div>
+                            <h1 className="text-3xl font-bold mb-2 text-slate-900">
+                              {part.name}
+                            </h1>
+            
+                            {part.category && (
+                              <p className="text-teal-600 font-semibold mb-4">
+                                📦 {part.category}
+                              </p>
+                            )}
 
-                    <div className="pt-2 border-t border-slate-200">
-                      <span className="text-slate-500 text-xs">
-                        Actualizado:{" "}
-                        {new Date(provider.lastUpdated).toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="py-6 px-3 rounded bg-red-50 border border-red-200 flex items-center justify-center">
-                    <span className="text-red-700 font-semibold">
-                      Sin stock en este proveedor
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+                            {part.description && (
+                              <p className="text-slate-600 mb-6 leading-relaxed">{part.description}</p>
+                            )}
+
+                            {/* Quick Facts */}
+                            <div className="mb-6 grid grid-cols-2 gap-3 text-sm bg-slate-50 p-4 rounded border border-slate-200">
+                              <div>
+                                <span className="text-slate-600">Número de Parte:</span>
+                                <p className="font-semibold text-slate-900">{part.sku}</p>
+                              </div>
+                              {part.brand && (
+                                <div>
+                                  <span className="text-slate-600">Marca:</span>
+                                  <p className="font-semibold text-slate-900">{part.brand}</p>
+                                </div>
+                              )}
+                              {part.model && (
+                                <div>
+                                  <span className="text-slate-600">Modelo:</span>
+                                  <p className="font-semibold text-slate-900">{part.model}</p>
+                                </div>
+                              )}
+                              {part.year && (
+                                <div>
+                                  <span className="text-slate-600">Año:</span>
+                                  <p className="font-semibold text-slate-900">{part.year}</p>
+                                </div>
+                              )}
+                              <div>
+                                <span className="text-slate-600">Proveedores:</span>
+                                <p className="font-semibold text-slate-900">{part.providers.length}</p>
+                              </div>
+                              <div>
+                                <span className="text-slate-600">Stock Total:</span>
+                                <p className={`font-semibold ${part.stock > 0 ? 'text-green-700' : 'text-red-700'}`}>
+                                  {part.stock > 0 ? `${part.stock} unidades` : 'Sin stock'}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Specs */}
+                            <div className="mb-6 bg-slate-50 p-4 rounded border border-slate-200">
+                              <h3 className="font-bold mb-3 text-slate-900">
+                                Especificaciones Completas
+                              </h3>
+                              <div className="space-y-3 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-slate-700 font-medium">SKU:</span>
+                                  <code className="bg-white px-2 py-1 rounded text-xs">{part.sku}</code>
+                                </div>
+                                {part.brand && (
+                                  <div className="flex justify-between">
+                                    <span className="text-slate-700 font-medium">Marca:</span>
+                                    <span className="text-slate-900 font-semibold">{part.brand}</span>
+                                  </div>
+                                )}
+                                {part.model && (
+                                  <div className="flex justify-between">
+                                    <span className="text-slate-700 font-medium">Modelo del Auto:</span>
+                                    <span className="text-slate-900 font-semibold">{part.model}</span>
+                                  </div>
+                                )}
+                                {part.year && (
+                                  <div className="flex justify-between">
+                                    <span className="text-slate-700 font-medium">Año:</span>
+                                    <span className="text-slate-900 font-semibold">{part.year}</span>
+                                  </div>
+                                )}
+                                {part.category && (
+                                  <div className="flex justify-between">
+                                    <span className="text-slate-700 font-medium">Categoría:</span>
+                                    <span className="text-slate-900 font-semibold">{part.category}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
