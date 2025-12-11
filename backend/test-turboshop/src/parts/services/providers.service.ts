@@ -95,7 +95,11 @@ export class ProvidersService {
       const response = await this.client.get(
         `/api/repuestosmax/productos?codigo=${codigo}`,
       );
-      const producto = response.data.productos?.[0] || response.data;
+      // API returns: { exito, resultado: { productos: [...] } }
+      const producto =
+        response.data.resultado?.productos?.[0] ||
+        response.data.productos?.[0] ||
+        response.data;
       return this.normalizeRepuestosMax(producto);
     } catch (error) {
       console.error(`RepuestosMax part ${codigo} error:`, error);
