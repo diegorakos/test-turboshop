@@ -12,9 +12,9 @@ export default function CatalogPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({
-    brand: "",
-    model: "",
-    year: "",
+    carBrand: "",
+    carModel: "",
+    carYear: "",
   });
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -36,9 +36,9 @@ export default function CatalogPage() {
         setError(null);
 
         const result = await partsAPI.getCatalog(page, 20, debouncedSearch, {
-          brand: filters.brand || undefined,
-          model: filters.model || undefined,
-          year: filters.year ? parseInt(filters.year) : undefined,
+          carBrand: filters.carBrand || undefined,
+          carModel: filters.carModel || undefined,
+          carYear: filters.carYear ? parseInt(filters.carYear) : undefined,
         });
 
         setCatalog(result);
@@ -74,50 +74,52 @@ export default function CatalogPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Catálogo de Repuestos</h1>
+      <h1 className="text-3xl font-bold mb-6 text-slate-900">
+        Catálogo de Repuestos
+      </h1>
 
       {/* Search and Filters */}
-      <div className="mb-8 bg-white p-6 rounded-lg shadow border border-gray-200">
+      <div className="mb-8 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <input
             type="text"
             placeholder="Buscar repuestos..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-500"
+            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
           />
 
           <input
             type="text"
-            placeholder="Marca"
-            value={filters.brand}
-            onChange={(e) => handleFilterChange("brand", e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-500"
+            placeholder="Marca del Auto"
+            value={filters.carBrand}
+            onChange={(e) => handleFilterChange("carBrand", e.target.value)}
+            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
           />
 
           <input
             type="text"
-            placeholder="Modelo"
-            value={filters.model}
-            onChange={(e) => handleFilterChange("model", e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-500"
+            placeholder="Modelo del Auto"
+            value={filters.carModel}
+            onChange={(e) => handleFilterChange("carModel", e.target.value)}
+            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
           />
 
           <input
             type="number"
-            placeholder="Año"
-            value={filters.year}
-            onChange={(e) => handleFilterChange("year", e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-500"
+            placeholder="Año del Auto"
+            value={filters.carYear}
+            onChange={(e) => handleFilterChange("carYear", e.target.value)}
+            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-slate-900 placeholder-slate-400"
           />
 
           <button
             onClick={() => {
               setSearch("");
-              setFilters({ brand: "", model: "", year: "" });
+              setFilters({ carBrand: "", carModel: "", carYear: "" });
               setPage(1);
             }}
-            className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
+            className="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium"
           >
             Limpiar
           </button>
@@ -127,14 +129,16 @@ export default function CatalogPage() {
       {/* Loading State */}
       {loading && (
         <div className="text-center py-12">
-          <div className="inline-block animate-spin text-3xl">⏳</div>
-          <p className="mt-4 text-gray-700 font-medium">Cargando catálogo...</p>
+          <div className="inline-block animate-spin text-5xl">⏳</div>
+          <p className="mt-4 text-slate-700 font-medium text-lg">
+            Cargando catálogo...
+          </p>
         </div>
       )}
 
       {/* Results Info */}
       {!loading && catalog && (
-        <div className="mb-4 text-sm text-gray-700 font-medium">
+        <div className="mb-4 text-lg text-slate-700 font-medium">
           Mostrando {catalog.parts.length} de {catalog.total} repuestos
         </div>
       )}
@@ -147,8 +151,8 @@ export default function CatalogPage() {
               key={part.sku}
               href={`/detail/${encodeURIComponent(part.sku)}`}
             >
-              <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer h-full flex flex-col">
-                <div className="w-full h-48 bg-gray-100 rounded mb-4 flex items-center justify-center overflow-hidden">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 hover:shadow-md hover:border-teal-300 transition-all cursor-pointer h-full flex flex-col">
+                <div className="w-full h-48 bg-slate-100 rounded mb-4 flex items-center justify-center overflow-hidden">
                   {part.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -162,18 +166,22 @@ export default function CatalogPage() {
                       }}
                     />
                   ) : (
-                    <span className="text-gray-400 text-sm">Sin imagen disponible</span>
+                    <span className="text-slate-400 text-sm">
+                      Sin imagen disponible
+                    </span>
                   )}
                 </div>
-                <h3 className="font-bold text-lg mb-2 text-gray-900">{part.name}</h3>
+                <h3 className="font-bold text-lg mb-2 text-slate-900">
+                  {part.name}
+                </h3>
                 {part.description && (
-                  <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                  <p className="text-sm text-slate-600 mb-2 line-clamp-2">
                     {part.description}
                   </p>
                 )}
                 <div className="mt-auto">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-2xl font-bold text-blue-700">
+                    <span className="text-2xl font-bold text-teal-600">
                       ${part.price.toFixed(2)}
                     </span>
                     <span
@@ -186,7 +194,7 @@ export default function CatalogPage() {
                       {part.stock > 0 ? `${part.stock} en stock` : "Sin stock"}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xs text-slate-500">
                     {part.providers.length} ofertas disponibles
                   </div>
                 </div>
@@ -199,16 +207,16 @@ export default function CatalogPage() {
       {/* No Results */}
       {!loading && catalog && catalog.parts.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-700 mb-4 font-medium">
+          <p className="text-slate-700 mb-4 font-medium">
             No se encontraron repuestos que coincidan con tu búsqueda
           </p>
           <button
             onClick={() => {
               setSearch("");
-              setFilters({ brand: "", model: "", year: "" });
+              setFilters({ carBrand: "", carModel: "", carYear: "" });
               setPage(1);
             }}
-            className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition-colors font-medium"
+            className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors font-medium"
           >
             Volver al catálogo completo
           </button>
@@ -221,19 +229,19 @@ export default function CatalogPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 disabled:opacity-50 transition-colors font-medium"
+            className="px-4 py-2 bg-slate-600 text-white rounded hover:bg-slate-700 disabled:opacity-50 transition-colors font-medium"
           >
             ← Anterior
           </button>
 
-          <span className="text-sm text-gray-700 font-medium">
+          <span className="text-sm text-slate-700 font-medium">
             Página {page} de {Math.ceil(catalog.total / catalog.limit)}
           </span>
 
           <button
             onClick={() => setPage((p) => p + 1)}
             disabled={!catalog.hasMore}
-            className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 disabled:opacity-50 transition-colors font-medium"
+            className="px-4 py-2 bg-slate-600 text-white rounded hover:bg-slate-700 disabled:opacity-50 transition-colors font-medium"
           >
             Siguiente →
           </button>

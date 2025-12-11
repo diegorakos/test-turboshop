@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8f9fa;
-  --foreground: #1a1a1a;
+  --background: #ffffff;
+  --foreground: #000000;
 }
 
 @theme inline {
@@ -14,14 +14,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #1a1a1a;
-    --foreground: #f0f0f0;
+    --background: #0a0a0a;
+    --foreground: #ffffff;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #ffffff;
+  color: #000000;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
 
@@ -41,5 +41,14 @@ button:disabled {
 
 input::placeholder,
 textarea::placeholder {
-  color: #9ca3af;
+  color: #6b7280;
+}
+
+/* High contrast button states */
+.bg-gray-700 {
+  @apply bg-gray-800;
+}
+
+.hover\:bg-gray-800:hover {
+  @apply bg-gray-900;
 }

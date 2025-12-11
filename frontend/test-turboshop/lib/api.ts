@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -42,7 +42,7 @@ export const partsAPI = {
     page: number = 1,
     limit: number = 20,
     search?: string,
-    filters?: { brand?: string; model?: string; year?: number }
+    filters?: { carBrand?: string; carModel?: string; carYear?: number }
   ): Promise<CatalogResponse> => {
     const params = new URLSearchParams({
       page: String(page),
@@ -50,9 +50,9 @@ export const partsAPI = {
     });
 
     if (search) params.append("search", search);
-    if (filters?.brand) params.append("brand", filters.brand);
-    if (filters?.model) params.append("model", filters.model);
-    if (filters?.year) params.append("year", String(filters.year));
+    if (filters?.carBrand) params.append("carBrand", filters.carBrand);
+    if (filters?.carModel) params.append("carModel", filters.carModel);
+    if (filters?.carYear) params.append("carYear", String(filters.carYear));
 
     const response = await apiClient.get<CatalogResponse>(
       `/parts/catalog?${params}`
