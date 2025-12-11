@@ -160,18 +160,22 @@ export default function DetailPage() {
             {/* Best Price */}
             <div className="mb-6 bg-teal-50 p-4 rounded border border-teal-200">
               <h3 className="font-bold mb-2 text-slate-900">Mejor Precio</h3>
-              <div className="text-4xl font-bold text-teal-600 mb-2">
-                ${part.price}
-              </div>
-              <div
-                className={`inline-block px-3 py-1 rounded font-semibold ${
-                  part.stock > 0
-                    ? "bg-green-100 text-green-900"
-                    : "bg-red-100 text-red-900"
-                }`}
-              >
-                {part.stock > 0 ? `${part.stock} en stock` : "Sin stock"}
-              </div>
+              {part.stock > 0 ? (
+                <>
+                  <div className="text-4xl font-bold text-teal-600 mb-2">
+                    ${part.price}
+                  </div>
+                  <div className="inline-block px-3 py-1 rounded font-semibold bg-green-100 text-green-900">
+                    {part.stock} en stock
+                  </div>
+                </>
+              ) : (
+                <div className="py-4 px-3 rounded bg-red-50 border border-red-200">
+                  <span className="text-red-700 font-semibold">
+                    Sin stock disponible
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -191,45 +195,51 @@ export default function DetailPage() {
                   {provider.provider}
                 </h3>
 
-                <div className="space-y-3">
-                  <div>
-                    <span className="text-slate-700 text-sm font-medium">
-                      Precio
-                    </span>
-                    <p className="text-2xl font-bold text-teal-600">
-                      ${provider.price}
-                    </p>
-                  </div>
-
-                  <div>
-                    <span className="text-slate-700 text-sm font-medium">
-                      Stock
-                    </span>
-                    <p className="font-semibold text-slate-900">
-                      {provider.stock > 0
-                        ? `${provider.stock} unidades`
-                        : "Sin stock"}
-                    </p>
-                  </div>
-
-                  {provider.providerSku && (
+                {provider.stock > 0 ? (
+                  <div className="space-y-3">
                     <div>
                       <span className="text-slate-700 text-sm font-medium">
-                        SKU Proveedor
+                        Precio
                       </span>
-                      <p className="font-mono text-xs break-all text-slate-500">
-                        {provider.providerSku}
+                      <p className="text-2xl font-bold text-teal-600">
+                        ${provider.price}
                       </p>
                     </div>
-                  )}
 
-                  <div className="pt-2 border-t border-slate-200">
-                    <span className="text-slate-500 text-xs">
-                      Actualizado:{" "}
-                      {new Date(provider.lastUpdated).toLocaleString()}
+                    <div>
+                      <span className="text-slate-700 text-sm font-medium">
+                        Stock
+                      </span>
+                      <p className="font-semibold text-slate-900">
+                        {provider.stock} unidades
+                      </p>
+                    </div>
+
+                    {provider.providerSku && (
+                      <div>
+                        <span className="text-slate-700 text-sm font-medium">
+                          SKU Proveedor
+                        </span>
+                        <p className="font-mono text-xs break-all text-slate-500">
+                          {provider.providerSku}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="pt-2 border-t border-slate-200">
+                      <span className="text-slate-500 text-xs">
+                        Actualizado:{" "}
+                        {new Date(provider.lastUpdated).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="py-6 px-3 rounded bg-red-50 border border-red-200 flex items-center justify-center">
+                    <span className="text-red-700 font-semibold">
+                      Sin stock en este proveedor
                     </span>
                   </div>
-                </div>
+                )}
               </div>
             ))}
           </div>

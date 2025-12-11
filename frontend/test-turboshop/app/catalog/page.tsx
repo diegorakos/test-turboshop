@@ -180,23 +180,27 @@ export default function CatalogPage() {
                   </p>
                 )}
                 <div className="mt-auto">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-2xl font-bold text-teal-600">
-                      ${part.price}
-                    </span>
-                    <span
-                      className={`px-3 py-1 rounded text-sm font-semibold ${
-                        part.stock > 0
-                          ? "bg-green-100 text-green-900"
-                          : "bg-red-100 text-red-900"
-                      }`}
-                    >
-                      {part.stock > 0 ? `${part.stock} en stock` : "Sin stock"}
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-500">
-                    {part.providers.length} ofertas disponibles
-                  </div>
+                  {part.stock > 0 ? (
+                    <>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-2xl font-bold text-teal-600">
+                          ${part.price}
+                        </span>
+                        <span className="px-3 py-1 rounded text-sm font-semibold bg-green-100 text-green-900">
+                          {part.stock} en stock
+                        </span>
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {part.providers.length} ofertas disponibles
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-center py-3 px-3 rounded bg-red-50 border border-red-200">
+                      <span className="text-red-700 font-semibold">
+                        Sin stock disponible
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </Link>
