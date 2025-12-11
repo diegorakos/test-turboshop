@@ -17,9 +17,9 @@ export class PartsController {
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('search') search?: string,
-    @Query('brand') brand?: string,
-    @Query('model') model?: string,
-    @Query('year') year?: string,
+    @Query('carBrand') carBrand?: string,
+    @Query('carModel') carModel?: string,
+    @Query('carYear') carYear?: string,
   ): Promise<CatalogResponseDTO> {
     const pageNum = page ? Math.max(1, parseInt(page, 10)) : 1;
     const limitNum = limit
@@ -27,10 +27,10 @@ export class PartsController {
       : 20;
 
     const filters: { brand?: string; model?: string; year?: number } = {};
-    if (brand) filters.brand = brand;
-    if (model) filters.model = model;
-    if (year) {
-      const yearNum = parseInt(year, 10);
+    if (carBrand) filters.brand = carBrand;
+    if (carModel) filters.model = carModel;
+    if (carYear) {
+      const yearNum = parseInt(carYear, 10);
       if (!Number.isNaN(yearNum)) {
         filters.year = yearNum;
       }
