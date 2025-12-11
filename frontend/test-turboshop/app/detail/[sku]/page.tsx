@@ -37,7 +37,7 @@ export default function DetailPage() {
   if (loading) {
     return (
       <div className="p-6 text-center">
-        <div className="inline-block animate-spin text-5xl">⏳</div>
+        <div className="inline-block animate-spin text-5xl">⚙️</div>
         <p className="mt-4 text-slate-700 font-medium">
           Cargando detalles del repuesto...
         </p>
@@ -161,7 +161,7 @@ export default function DetailPage() {
             <div className="mb-6 bg-teal-50 p-4 rounded border border-teal-200">
               <h3 className="font-bold mb-2 text-slate-900">Mejor Precio</h3>
               <div className="text-4xl font-bold text-teal-600 mb-2">
-                ${part.price.toFixed(2)}
+                ${part.price}
               </div>
               <div
                 className={`inline-block px-3 py-1 rounded font-semibold ${
@@ -197,7 +197,7 @@ export default function DetailPage() {
                       Precio
                     </span>
                     <p className="text-2xl font-bold text-teal-600">
-                      ${provider.price.toFixed(2)}
+                      ${provider.price}
                     </p>
                   </div>
 

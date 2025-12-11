@@ -129,7 +129,7 @@ export default function CatalogPage() {
       {/* Loading State */}
       {loading && (
         <div className="text-center py-12">
-          <div className="inline-block animate-spin text-5xl">⏳</div>
+          <div className="inline-block animate-spin text-5xl">⚙️</div>
           <p className="mt-4 text-slate-700 font-medium text-lg">
             Cargando catálogo...
           </p>
@@ -182,7 +182,7 @@ export default function CatalogPage() {
                 <div className="mt-auto">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-2xl font-bold text-teal-600">
-                      ${part.price.toFixed(2)}
+                      ${part.price}
                     </span>
                     <span
                       className={`px-3 py-1 rounded text-sm font-semibold ${
